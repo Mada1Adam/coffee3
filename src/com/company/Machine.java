@@ -2,61 +2,80 @@ package com.company;
 
 import java.util.Scanner;
 
-public class Machine {
-    int coffeeHave = (int) (Math.random() * 800);
-    int waterHave = (int) (Math.random() * 1500);
+class Machine {
+    private int coffeeHave = 1; //(int) (Math.random() * 800);
+    private int waterHave = 1; //(int) (Math.random() * 1500);
+
     Drink coffee = new Drink(250, 30);
-    Scanner scan = new Scanner(System.in);
-    public void cooking(){
-        print();
-        String word = scan.nextLine();
+    Scanner scanner = new Scanner(System.in);
+    void cook(){
+        printCoffeeHave(coffeeHave, waterHave);
             while (true) {
-                //word.equals("yes") && coffee.getCoffeeNeed() < coffeeHave && coffee.getWaterNeed() < waterHave
-                if (check()) {
-                    use(coffee.getWaterNeed(), coffee.getCoffeeNeed());
-                    System.out.println("Here is ur coffee");
-                    System.out.println("More coffee?");
-                    word = scan.nextLine();
-                } else if(word.equals("no, thx") || coffee.getCoffeeNeed() < coffeeHave || coffee.getWaterNeed() < waterHave) {
+                printAskCoffee();
+                String input = scanner.nextLine();
+                if (checkIfEnoughIngredient(input, coffee.getWaterNeed(), coffee.getCoffeeNeed())) {
+                    cookCoffee(coffee.getWaterNeed(), coffee.getCoffeeNeed());
+                } else if (!checkInput(input)) {
+                    System.out.println("wrong input, please try again");
+                } else if (input.equals("no, thx") && coffee.getCoffeeNeed() <
+                        coffeeHave && coffee.getWaterNeed() < waterHave) {
                     System.out.println("Have a nice day, goodbye, Honey Bear");
                     break;
                 } else if (coffee.getCoffeeNeed() > coffeeHave || coffee.getWaterNeed() > waterHave) {
-                    System.out.println("Not enough ingredients, looser, add them?");
-                    adding();
-                    System.out.println("coffee: " + coffeeHave + "water: " + waterHave + " coffee? " );
-                    word = scan.nextLine();
-                    if (word.equals("yes")){
-                        use(coffee.getWaterNeed(), coffee.getCoffeeNeed());
-                    } else {
-                        break;
-                    }
+                    askAdd(coffee.getWaterNeed(), coffee.getCoffeeNeed());
                 } else {
                     System.out.println("Goodbye, asshole");
                     break;
                 }
             }
     }
-    public void adding(){
-        String wordAdd = scan.nextLine();
+    public void addIngredient() {
+        String wordAdd = scanner.nextLine();
         if(wordAdd.equals("yes, please")) {
             this.coffeeHave += 450;
             this.waterHave += 850;
         }
     }
-    public void print(){
-        System.out.println("coffee u have: " + coffeeHave);
-        System.out.println("water u have: " + waterHave);
-        System.out.println("Hello, some coffee?");
 
-    }
-    public void use(int waterNeed, int coffeeNeed) {
+    public void useIngredient(int waterNeed, int coffeeNeed) {
         this.coffeeHave -= coffeeNeed;
         this.waterHave -= waterNeed;
     }
-    public boolean check(){
+    public boolean checkInput (String input) {
+        return input.equals("yes") || input.equals("no, thx") || input.equals("no");
+    }
+
+    public void printAskCoffee() {
+        System.out.println("Some coffee?");
+        System.out.println("1. yes");
+        System.out.println("2. no, thx");
+    }
+
+    public void printCoffeeHave(int coffeeHave, int waterHave) {
+        System.out.printf("coffee u have: %s", coffeeHave);
+        System.out.printf("water u have: %s", waterHave);
+    }
+
+    public boolean checkIfEnoughIngredient(String input, int coffeeNeed, int waterNeed) {
         boolean yesOrNo;
-        String word1 = scan.nextLine();
-        yesOrNo = word1.equals("yes") && coffee.getCoffeeNeed() < coffeeHave && coffee.getWaterNeed() < waterHave;
+        yesOrNo = input.equals("yes") && coffeeNeed < coffeeHave && waterNeed < waterHave;
         return yesOrNo;
+    }
+
+    public void cookCoffee(int waterNeed, int coffeeNeed) {
+        useIngredient(waterNeed, coffeeNeed);
+        System.out.println("Here is ur coffee");
+    }
+
+    public void askAdd(int waterNeed, int coffeeNeed) {
+        System.out.println("Not enough ingredients, looser, add?");
+        addIngredient();
+        System.out.println("coffee: " + coffeeHave + " water: " + waterHave + " coffee? " );
+        String input = scanner.nextLine();
+        if (input.equals("yes")){
+            cookCoffee(waterNeed, coffeeNeed);
+        } else {
+            System.out.println("Wrong input");
+        }
     }
 }
