@@ -2,28 +2,33 @@ package com.company;
 
 import java.util.Scanner;
 
-class Machine {
+class Machine { //правило yangi
     private int coffeeHave;
-    private int waterHave = (int) (Math.random() * 1500);
+    private int waterHave;
+    private final Drink coffee;
+    private final Scanner scanner;
 
-    //Machine coffeeHave = new Values();
-    private Drink coffee = new Drink(250, 30);
+    Machine() {
+        coffeeHave = (int) (Math.random() * 800);
+        waterHave = (int) (Math.random() * 1500);
+        coffee = new Drink(250, 30);
+        scanner = new Scanner(System.in);
+    }
 
-    private Scanner scanner = new Scanner(System.in);
-     void cook(){
+     void cook() { //сохранить и сначала ВСЕ
         printCoffeeHave(coffeeHave, waterHave);
         while (true) {
             printAskCoffee();
             String input = scanner.nextLine();
-            if (checkIfEnoughIngredient(input, coffee.getWaterNeed(), coffee.getCoffeeNeed())) {
-                cookCoffee(coffee.getWaterNeed(), coffee.getCoffeeNeed());
+            if (checkIfEnoughIngredients(input, coffee.waterNeed(), coffee.coffeeNeed())) {
+                cookCoffee(coffee.waterNeed(), coffee.coffeeNeed());
             } else if (!checkInput(input)) {
                 showMessage("Wrong input, please try again");
-            } else if (checkIfPolite(input)) {
+            } else if (checkIfPoliteAndEnoughIngredients(input)) {
                 showMessage("Have a nice day, goodbye");
                 break;
-            } else if (checkIfAdd()) {
-                askAdd(coffee.getWaterNeed(), coffee.getCoffeeNeed());
+            } else if (isEnoughIngredientsToCookCoffee()) {
+                askAdd(coffee.waterNeed(), coffee.coffeeNeed());
             } else {
                 showMessage("Goodbye");
                 break;
@@ -31,28 +36,27 @@ class Machine {
         }
     }
 
-    private void addIngredient() {
-        String wordAdd = scanner.nextLine();
-        if (wordAdd.equals("Yes, please")) {
+    private void addIngredients() {
+        String input = scanner.nextLine();
+        if (input.equalsIgnoreCase("Yes, please")) {
             this.coffeeHave += 450;
             this.waterHave += 850;
         }
     }
 
-    private void useIngredient(int waterNeed, int coffeeNeed) {
+    private void useIngredients(int waterNeed, int coffeeNeed) {
         this.coffeeHave -= coffeeNeed;
         this.waterHave -= waterNeed;
     }
 
-    private boolean checkInput (String input) {
-        return input.equals("Yes") || input.equals("No, thanks") || input.equals("No");
+    private boolean checkInput(String input) {
+        return input.equalsIgnoreCase("Yes") || input.equalsIgnoreCase("No, thanks") || input.equalsIgnoreCase("No"); //letters y or n
     }
 
     private void printAskCoffee() {
         String someCoffee = """
                 Some coffee?
-                1. Yes
-                2. No, thanks
+                Type 'y' for yes ir 'n' for no
                 """;
         showMessage(someCoffee);
     }
@@ -62,14 +66,16 @@ class Machine {
         showMessage(String.format("Water you have: %d", waterHave));
     }
 
-    private boolean checkIfEnoughIngredient(String input, int coffeeNeed, int waterNeed) {
-        return input.equals("Yes") && coffeeNeed < coffeeHave && waterNeed < waterHave;
+    private boolean checkIfEnoughIngredients(String input, int coffeeNeed, int waterNeed) { //Change, don't check input
+        return input.equalsIgnoreCase("y")
+                && coffeeNeed < coffeeHave
+                && waterNeed < waterHave;
     }
 
     private void cookCoffee(int waterNeed, int coffeeNeed) {
-        useIngredient(waterNeed, coffeeNeed);
+        useIngredients(waterNeed, coffeeNeed);
         showMessage("""
-                Here is your coffee: 
+                Here is your coffee:
                 ┈┈┈┈┈┈♡┈┈┈┈
                 ┈┈┈┈┈╭╯♡┈┈┈
                 ┈┈╱▔╭╯▔╲┈┈┈
@@ -83,13 +89,13 @@ class Machine {
 
     private void askAdd(int waterNeed, int coffeeNeed) {
         showMessage("Not enough ingredients, add?");
-        addIngredient();
+        addIngredients();
         showMessage(String.format("Coffee: %d water: %d coffee?", coffeeHave, waterHave));
         String input = scanner.nextLine();
-        if (input.equals("Yes")){
+        if (input.equalsIgnoreCase("Yes")){
             cookCoffee(waterNeed, coffeeNeed);
         } else {
-            showMessage("Wrong input");
+            showMessage("Wrong input"); //Change, too much
         }
     }
 
@@ -97,14 +103,14 @@ class Machine {
         System.out.println(message);
     }
 
-    private boolean checkIfPolite(String input) {
-        return input.equals("No, thanks") && coffee.getCoffeeNeed() < coffeeHave && coffee.getWaterNeed() < waterHave;
+    private boolean checkIfPoliteAndEnoughIngredients(String input) { //Change, if = is
+        return input.equalsIgnoreCase("No, thanks")
+                && coffee.coffeeNeed() < coffeeHave
+                && coffee.coffeeNeed() < waterHave;
     }
 
-    private boolean checkIfAdd() {
-        return coffee.getCoffeeNeed() > coffeeHave || coffee.getWaterNeed() > waterHave;
+    private boolean isEnoughIngredientsToCookCoffee() { 
+        return coffee.coffeeNeed() > coffeeHave
+                || coffee.waterNeed() > waterHave;
     }
-    /*Values(int num) {
-         this.coffeeHave = (int) (Math.random() * 800);
-    }*/
 }
