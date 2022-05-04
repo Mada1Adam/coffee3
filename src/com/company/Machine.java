@@ -6,7 +6,7 @@ class Machine {
     private int coffeeHave;
     private int waterHave = (int) (Math.random() * 1500);
 
-    Machine coffeeHave = new Values();
+    //Machine coffeeHave = new Values();
     private Drink coffee = new Drink(250, 30);
 
     private Scanner scanner = new Scanner(System.in);
@@ -104,7 +104,7 @@ class Machine {
     private boolean checkIfAdd() {
         return coffee.getCoffeeNeed() > coffeeHave || coffee.getWaterNeed() > waterHave;
     }
-    Values(int num) {
+    /*Values(int num) {
          this.coffeeHave = (int) (Math.random() * 800);
-    }
+    }*/
 }
