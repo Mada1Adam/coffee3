@@ -3,89 +3,108 @@ package com.company;
 import java.util.Scanner;
 
 class Machine {
-    private int coffeeHave = (int) (Math.random() * 800);
+    private int coffeeHave;
     private int waterHave = (int) (Math.random() * 1500);
 
+    Machine coffeeHave = new Values();
     private Drink coffee = new Drink(250, 30);
 
     private Scanner scanner = new Scanner(System.in);
-    void cook(){
+     void cook(){
         printCoffeeHave(coffeeHave, waterHave);
-            while (true) {
-                printAskCoffee();
-                String input = scanner.nextLine();
-                if (checkIfEnoughIngredient(input, coffee.getWaterNeed(), coffee.getCoffeeNeed())) {
-                    cookCoffee(coffee.getWaterNeed(), coffee.getCoffeeNeed());
-                } else if (!checkInput(input)) {
-                    showMessage("wrong input, please try again");
-                } else if (checkIfPolite(input)) {
-                    showMessage("Have a nice day, goodbye, Honey Bear");
-                    break;
-                } else if (checkIfAdd()) {
-                    askAdd(coffee.getWaterNeed(), coffee.getCoffeeNeed());
-                } else {
-                    showMessage("Goodbye, asshole");
-                    break;
-                }
+        while (true) {
+            printAskCoffee();
+            String input = scanner.nextLine();
+            if (checkIfEnoughIngredient(input, coffee.getWaterNeed(), coffee.getCoffeeNeed())) {
+                cookCoffee(coffee.getWaterNeed(), coffee.getCoffeeNeed());
+            } else if (!checkInput(input)) {
+                showMessage("Wrong input, please try again");
+            } else if (checkIfPolite(input)) {
+                showMessage("Have a nice day, goodbye");
+                break;
+            } else if (checkIfAdd()) {
+                askAdd(coffee.getWaterNeed(), coffee.getCoffeeNeed());
+            } else {
+                showMessage("Goodbye");
+                break;
             }
+        }
     }
-    void addIngredient() {
+
+    private void addIngredient() {
         String wordAdd = scanner.nextLine();
-        if (wordAdd.equals("yes, please")) {
+        if (wordAdd.equals("Yes, please")) {
             this.coffeeHave += 450;
             this.waterHave += 850;
         }
     }
 
-    void useIngredient(int waterNeed, int coffeeNeed) {
+    private void useIngredient(int waterNeed, int coffeeNeed) {
         this.coffeeHave -= coffeeNeed;
         this.waterHave -= waterNeed;
     }
-    boolean checkInput (String input) {
-        return input.equals("yes") || input.equals("no, thx") || input.equals("no");
+
+    private boolean checkInput (String input) {
+        return input.equals("Yes") || input.equals("No, thanks") || input.equals("No");
     }
 
-    void printAskCoffee() {
+    private void printAskCoffee() {
         String someCoffee = """
-                some coffee?
-                1. yes
-                2. no, thx
+                Some coffee?
+                1. Yes
+                2. No, thanks
                 """;
         showMessage(someCoffee);
     }
 
-    void printCoffeeHave(int coffeeHave, int waterHave) {
-        showMessage(String.format("coffee u have: %d", coffeeHave));
-        showMessage(String.format("watter u have: %d", waterHave));
+    private void printCoffeeHave(int coffeeHave, int waterHave) {
+        showMessage(String.format("Coffee you have: %d", coffeeHave));
+        showMessage(String.format("Water you have: %d", waterHave));
     }
 
-    boolean checkIfEnoughIngredient(String input, int coffeeNeed, int waterNeed) {
-        return input.equals("yes") && coffeeNeed < coffeeHave && waterNeed < waterHave;
+    private boolean checkIfEnoughIngredient(String input, int coffeeNeed, int waterNeed) {
+        return input.equals("Yes") && coffeeNeed < coffeeHave && waterNeed < waterHave;
     }
 
-    void cookCoffee(int waterNeed, int coffeeNeed) {
+    private void cookCoffee(int waterNeed, int coffeeNeed) {
         useIngredient(waterNeed, coffeeNeed);
-        showMessage("Here is ur coffee");
+        showMessage("""
+                Here is your coffee: 
+                ┈┈┈┈┈┈♡┈┈┈┈
+                ┈┈┈┈┈╭╯♡┈┈┈
+                ┈┈╱▔╭╯▔╲┈┈┈
+                ┈▕╲▂▂▂▂╱▏┈┈
+                ┈┈▏┊┊┊┊▕━╮┈
+                ┈┈▏┊┊┊┊▕┈┃┈
+                ┈┈▏┊┊┊┊▕━╯┈
+                ┈┈╲▂▂▂▂╱┈┈┈
+                """);
     }
 
-    void askAdd(int waterNeed, int coffeeNeed) {
-        showMessage("Not enough ingredients, looser, add?");
+    private void askAdd(int waterNeed, int coffeeNeed) {
+        showMessage("Not enough ingredients, add?");
         addIngredient();
-        showMessage(String.format("coffee: %d water: %d coffee?", coffeeHave, waterHave));
+        showMessage(String.format("Coffee: %d water: %d coffee?", coffeeHave, waterHave));
         String input = scanner.nextLine();
-        if (input.equals("yes")){
+        if (input.equals("Yes")){
             cookCoffee(waterNeed, coffeeNeed);
         } else {
             showMessage("Wrong input");
         }
     }
-    void showMessage(String message) {
+
+    private void showMessage(String message) {
         System.out.println(message);
     }
-    boolean checkIfPolite(String input) {
-        return input.equals("no, thx") && coffee.getCoffeeNeed() < coffeeHave && coffee.getWaterNeed() < waterHave;
+
+    private boolean checkIfPolite(String input) {
+        return input.equals("No, thanks") && coffee.getCoffeeNeed() < coffeeHave && coffee.getWaterNeed() < waterHave;
     }
-    boolean checkIfAdd() {
+
+    private boolean checkIfAdd() {
         return coffee.getCoffeeNeed() > coffeeHave || coffee.getWaterNeed() > waterHave;
+    }
+    Values(int num) {
+         this.coffeeHave = (int) (Math.random() * 800);
     }
 }

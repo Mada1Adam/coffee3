@@ -1,8 +1,8 @@
 package com.company;
 
-public class Drink {
-    private int coffeeNeed;
-    private int waterNeed;
+class Drink {
+    private final int coffeeNeed;
+    private final int waterNeed;
     
     Drink(int waterNeed, int coffeeNeed) {
         this.coffeeNeed = coffeeNeed;
